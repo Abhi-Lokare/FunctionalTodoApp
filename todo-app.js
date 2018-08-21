@@ -1,3 +1,4 @@
+console.log(uuidv4())
 //Get the Saved todos from the LocalStorage
 let todos = getSavedTodos()
 

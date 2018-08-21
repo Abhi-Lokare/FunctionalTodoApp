@@ -3,7 +3,7 @@ const getSavedTodos = function () {
     const todosJSON = localStorage.getItem('todos')
     if (todosJSON !== null) {
         return JSON.parse(todosJSON)
-    }else{
+    } else {
         return []
     }
 }
@@ -53,21 +53,42 @@ function filteredTodoList(filteredTodos) {
     });
 }
 
+//Remove the Todo from DOM
+function removeTodo(id){
+ const todoIndex = todos.findIndex(function(todo){  //find the Index of the Todo that clicked
+    return todo.id === id 
+ })
+ if(todoIndex > -1){ //if id matched remove it
+     todos.splice(todoIndex, 1)
+ }
+}
 //Generate DOM elements for an individual note
 function generateTodoDOM(todo) {
+    //create a div separately
     const todoEl = document.createElement('div'),
-          checkBox = document.createElement('input')
-          checkBox.setAttribute('type', 'checkbox')
-          addEl = document.createElement('span')
-          addEl.textContent = todo.text
-        deleteTodo = document.createElement('button')
-        deleteTodo.textContent = 'X'
-         
+    //Create a checkBox 
+    checkBox = document.createElement('input')
+    checkBox.checked = todo.completed // check box should be checked when todo is completed
+    checkBox.setAttribute('type', 'checkbox')
+    //Create a span with the todo Title      
+    addEl = document.createElement('span')
+    addEl.textContent = todo.text
+    //Create a X button      
+    deleteTodo = document.createElement('button')
+    deleteTodo.textContent = 'X'
 
-    todoEl.appendChild(checkBox) 
-    todoEl.appendChild(addEl) 
-    todoEl.appendChild(deleteTodo) 
-   
+    //Append everything to the Created Div
+    todoEl.appendChild(checkBox)
+    todoEl.appendChild(addEl)
+    todoEl.appendChild(deleteTodo)
+
+    //Add fuctionality to that delete X button
+    deleteTodo.addEventListener('click', function(){
+        removeTodo(todo.id) //Remove todo which is clicked
+        saveTodos(todos)//Save the Todo in LS
+        renderTodos(todos, filters)//Render the updates Todos
+    })
+    //Append new dicv to the Main todo div
     document.querySelector('#todos').appendChild(todoEl)
 }
 
@@ -79,6 +100,7 @@ function setFilter(e) {
 //Push user Entered todos to the main todos array
 function pushUserTodos(e) {
     todos.push({
+        id: uuidv4(),//add the unique ID
         text: e.target.elements.text.value,
         completed: false
     });
