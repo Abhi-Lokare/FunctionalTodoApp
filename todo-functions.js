@@ -62,6 +62,16 @@ function removeTodo(id){
      todos.splice(todoIndex, 1)
  }
 }
+  //ToggleTodo the when checked/not checked
+  function toggleTodo(id){
+    const todoObj = todos.find(function(todo){ //Find that exact todo which is checked by passing the unique id
+        return todo.id === id //checking the id
+    })
+  
+    if(todoObj != undefined){ //check weather Invalid todo is passed
+        todo.completed = !todo.completed //toggle logic.. 
+    }
+}
 //Generate DOM elements for an individual note
 function generateTodoDOM(todo) {
     //create a div separately
@@ -70,6 +80,13 @@ function generateTodoDOM(todo) {
     checkBox = document.createElement('input')
     checkBox.checked = todo.completed // check box should be checked when todo is completed
     checkBox.setAttribute('type', 'checkbox')
+
+    //Event Listener for the checkBox
+    checkBox.addEventListener('change', function(){
+        toggleTodo(todo.id)
+        saveTodos(todos) ///save it to the LS
+        renderTodos(todos, filters) //Render the whole todos array again
+        })
     //Create a span with the todo Title      
     addEl = document.createElement('span')
     addEl.textContent = todo.text
